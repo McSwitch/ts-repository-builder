@@ -1,0 +1,30 @@
+{
+  "name": "ts-repository-builder",
+  "version": "0.0.1",
+  "description": "A very simple repository builder for typescript",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "mocha",
+    "build": "tsc"
+  },
+  "repository": {
+    "url": "https://github.com/McSwitch/ts-repository-builder"
+  },
+  "keywords": [],
+  "author": "McSwitch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/McSwitch/ts-repository-builder/issues"
+  },
+  "homepage": "https://github.com/McSwitch/ts-repository-builder#readme",
+  "devDependencies": {
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "^10.0.6",
+    "@types/sinon": "^17.0.3",
+    "chai": "^5.1.0",
+    "mocha": "^10.3.0",
+    "sinon": "^17.0.1",
+    "typescript": "^5.3.3"
+  }
+}
