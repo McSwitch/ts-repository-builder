@@ -3,12 +3,17 @@
 import { assert } from "chai";
 import { Repository } from "../src/repository.js";
 
-describe('Repository implements methods', () => {
+class TestModel {
+    id: string;
+}
+const TestSlug = 'users';
+const GetTestRepository = (): Repository<TestModel> => {
+    return new Repository<TestModel>(TestSlug);
+}
 
-    class User {
-        id: string;
-    }
-    let repo = new Repository<User>('users');
+describe('Repository implements LCRUDR methods', () => {
+
+    let repo = GetTestRepository();
 
     it('List', () => {
         assert.isTrue('List' in repo);
@@ -17,30 +22,32 @@ describe('Repository implements methods', () => {
     it('Create', () => {
         assert.isTrue('Create' in repo);
     });
+
     it('Read', () => {
         assert.isTrue('Read' in repo);
     });
+
     it('Update', () => {
         assert.isTrue('Update' in repo);
     });
+
     it('Delete', () => {
         assert.isTrue('Delete' in repo);
     });
+
     it('Restore', () => {
         assert.isTrue('Restore' in repo);
     });
 
 });
 
-describe('Repository has properties', () => {
+describe('Repository has required properties', () => {
 
-    class User {
-        id: string;
-    }
-    let repo = new Repository<User>('users');
+    let repo = GetTestRepository();
 
     it('slug', () => {
         assert.isTrue('slug' in repo);
+
     });
 
     it('fields', () => {

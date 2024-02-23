@@ -1,8 +1,21 @@
 export class Repository {
     constructor(slug) {
+        this.slug = null;
+        this.fields = null;
+        this.groups = null;
+        this.columns = null;
     }
-    Create(record) {
-        // todo: push the record to api and return back to caller
+    List() {
         return null;
+    }
+    Create() {
+    }
+    Read() {
+    }
+    Update() {
+    }
+    Delete() {
+    }
+    Restore() {
     }
 }

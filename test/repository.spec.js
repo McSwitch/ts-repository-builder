@@ -1,10 +1,14 @@
 'use strict';
 import { assert } from "chai";
 import { Repository } from "../src/repository.js";
-describe('Repository implements methods', () => {
-    class User {
-    }
-    let repo = new Repository('users');
+class TestModel {
+}
+const TestSlug = 'users';
+const GetTestRepository = () => {
+    return new Repository(TestSlug);
+};
+describe('Repository implements LCRUDR methods', () => {
+    let repo = GetTestRepository();
     it('List', () => {
         assert.isTrue('List' in repo);
     });
@@ -24,10 +28,8 @@ describe('Repository implements methods', () => {
         assert.isTrue('Restore' in repo);
     });
 });
-describe('Repository has properties', () => {
-    class User {
-    }
-    let repo = new Repository('users');
+describe('Repository has required properties', () => {
+    let repo = GetTestRepository();
     it('slug', () => {
         assert.isTrue('slug' in repo);
     });

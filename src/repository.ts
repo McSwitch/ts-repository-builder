@@ -1,13 +1,30 @@
-export interface IModel {
-    id: string;
-}
+import { IModel } from "./imodel";
 
 export class Repository<T extends IModel> {
+    slug: any = null;
+    fields: any = null;
+    groups: any = null;
+    columns: any = null;
+
     constructor(slug: string) {
     }
 
-    Create(record: T): T {
-        // todo: push the record to api and return back to caller
+    List(): T[] {
         return null;
+    }
+
+    Create() {
+    }
+
+    Read() {
+    }
+
+    Update() {
+    }
+
+    Delete() {
+    }
+
+    Restore() {
     }
 }
