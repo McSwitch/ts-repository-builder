@@ -8,6 +8,12 @@ export function urlJoin(baseUrl: string, path: string): string {
     return `${baseUrl}/${path}`;
 }
 
+export function wrapParams(url: string, params: string[][] | Record<string, string> | string | URLSearchParams): URL {
+    let fullUrl = new URL(url);
+    fullUrl.search = new URLSearchParams(params).toString();
+    return fullUrl;
+}
+
 export const DefaultRecordsPerPage: number = 15;
 
 export class ListResponse<T> {
@@ -41,7 +47,10 @@ export class Repository<T extends IModel> {
             this.fetchHandler(
                 url,
                 {
-                    method: "POST",
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
                 })
                 .then(res => {
                     if (res.status >= 300) {
@@ -65,23 +74,134 @@ export class Repository<T extends IModel> {
         });
     }
 
-    create(record: T): T {
-        return null;
+    create(record: T): Promise<T> {
+        let url = urlJoin(this.baseUrl, this.slug);
+        return new Promise<T>((resolve, reject) => {
+            this.fetchHandler(
+                url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                    body: JSON.stringify(record),
+                })
+                .then(res => {
+                    if (res.status >= 300) {
+                        reject(res);
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    resolve(
+                        res as T
+                    );
+                });
+        });
     }
 
-    read(uuid: string): T {
-        return null;
+    read(uuid: string): Promise<T> {
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), uuid);
+        return new Promise<T>((resolve, reject) => {
+            this.fetchHandler(
+                url,
+                {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json",
+                    },
+                })
+                .then(res => {
+                    if (res.status >= 300) {
+                        reject(res);
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    resolve(
+                        res as T
+                    );
+                });
+        });
     }
 
-    update(record: T): T {
-        return null;
+    update(record: T): Promise<T> {
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), record.uuid);
+        return new Promise<T>((resolve, reject) => {
+            this.fetchHandler(
+                url,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                    body: JSON.stringify(record),
+                })
+                .then(res => {
+                    if (res.status >= 300) {
+                        reject(res);
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    resolve(
+                        res as T
+                    );
+                });
+        });
     }
 
-    delete(uuid: string, hard: boolean = false): T {
-        return null;
+    delete(uuid: string, hard: boolean = false): Promise<T> {
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), uuid);
+        return new Promise<T>((resolve, reject) => {
+            this.fetchHandler(
+                wrapParams(url, [['hard',hard?'1':'0']]),
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                })
+                .then(res => {
+                    if (res.status >= 300) {
+                        reject(res);
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    resolve(
+                        res as T
+                    );
+                });
+        });
     }
 
-    restore(uuid: string): T {
-        return null;
+    restore(uuid: string): Promise<T> {
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), uuid);
+        return new Promise<T>((resolve, reject) => {
+            this.fetchHandler(
+                url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                    },
+                })
+                .then(res => {
+                    if (res.status >= 300) {
+                        reject(res);
+                    }
+                    return res.json();
+                })
+                .then(res => {
+                    resolve(
+                        res as T
+                    );
+                });
+        });
     }
 }

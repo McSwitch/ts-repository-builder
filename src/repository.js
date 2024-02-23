@@ -4,6 +4,11 @@ export function urlJoin(baseUrl, path) {
     path = path.endsWith('/') ? path.slice(0, -1) : path;
     return `${baseUrl}/${path}`;
 }
+export function wrapParams(url, params) {
+    let fullUrl = new URL(url);
+    fullUrl.search = new URLSearchParams(params).toString();
+    return fullUrl;
+}
 export const DefaultRecordsPerPage = 15;
 export class ListResponse {
     constructor(records, paginator) {
@@ -30,7 +35,10 @@ export class Repository {
         let paginator = null;
         return new Promise((resolve, reject) => {
             this.fetchHandler(url, {
-                method: "POST",
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
             })
                 .then(res => {
                 if (res.status >= 300) {
@@ -49,18 +57,109 @@ export class Repository {
         });
     }
     create(record) {
-        return null;
+        let url = urlJoin(this.baseUrl, this.slug);
+        return new Promise((resolve, reject) => {
+            this.fetchHandler(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body: JSON.stringify(record),
+            })
+                .then(res => {
+                if (res.status >= 300) {
+                    reject(res);
+                }
+                return res.json();
+            })
+                .then(res => {
+                resolve(res);
+            });
+        });
     }
     read(uuid) {
-        return null;
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), uuid);
+        return new Promise((resolve, reject) => {
+            this.fetchHandler(url, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json",
+                },
+            })
+                .then(res => {
+                if (res.status >= 300) {
+                    reject(res);
+                }
+                return res.json();
+            })
+                .then(res => {
+                resolve(res);
+            });
+        });
     }
     update(record) {
-        return null;
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), record.uuid);
+        return new Promise((resolve, reject) => {
+            this.fetchHandler(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                body: JSON.stringify(record),
+            })
+                .then(res => {
+                if (res.status >= 300) {
+                    reject(res);
+                }
+                return res.json();
+            })
+                .then(res => {
+                resolve(res);
+            });
+        });
     }
     delete(uuid, hard = false) {
-        return null;
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), uuid);
+        return new Promise((resolve, reject) => {
+            this.fetchHandler(wrapParams(url, [['hard', hard ? '1' : '0']]), {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+            })
+                .then(res => {
+                if (res.status >= 300) {
+                    reject(res);
+                }
+                return res.json();
+            })
+                .then(res => {
+                resolve(res);
+            });
+        });
     }
     restore(uuid) {
-        return null;
+        let url = urlJoin(urlJoin(this.baseUrl, this.slug), uuid);
+        return new Promise((resolve, reject) => {
+            this.fetchHandler(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+            })
+                .then(res => {
+                if (res.status >= 300) {
+                    reject(res);
+                }
+                return res.json();
+            })
+                .then(res => {
+                resolve(res);
+            });
+        });
     }
 }

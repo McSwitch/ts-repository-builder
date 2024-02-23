@@ -8,7 +8,6 @@ export class Paginator {
     }
     toHeader() {
         let paginatorJson = JSON.stringify(this);
-        let paginatorHeader = btoa(paginatorJson);
-        return paginatorHeader;
+        return btoa(paginatorJson);
     }
 }

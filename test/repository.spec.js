@@ -64,11 +64,11 @@ describe('Repository implements LCRUDR methods', () => {
         paginator.recordsOnCurrentPage = records.length;
         paginator.recordsPerPage = DefaultRecordsPerPage;
         repo.fetchHandler = (input, init) => {
-            assert.equal(input, urlJoin(TestBaseUrl, TestSlug));
+            assert.equal(input.toString(), urlJoin(TestBaseUrl, TestSlug));
             assert.isNotNull(init);
             assert.isTrue('method' in init);
-            assert.equal(init.method, "POST");
-            return new Promise((resolve, reject) => {
+            assert.equal(init.method, "GET");
+            return new Promise((resolve) => {
                 resolve(new Response(JSON.stringify(records), {
                     headers: {
                         'X-Paginator': paginator.toHeader(),
@@ -83,21 +83,100 @@ describe('Repository implements LCRUDR methods', () => {
             throw res;
         });
     }));
-    it('create', () => {
+    it('create', () => __awaiter(void 0, void 0, void 0, function* () {
         assert.isTrue('create' in repo);
-    });
-    it('read', () => {
+        let record = new TestModel(1, 'a0c643d9-c82e-4c36-9c9b-43321bad87bc');
+        repo.fetchHandler = (input, init) => {
+            assert.equal(input.toString(), urlJoin(TestBaseUrl, TestSlug));
+            assert.isNotNull(init);
+            assert.isTrue('method' in init);
+            assert.equal(init.method, "POST");
+            return new Promise((resolve) => {
+                resolve(new Response(JSON.stringify(record)));
+            });
+        };
+        yield repo.create(record).then(res => {
+            assert.equal(JSON.stringify(res), JSON.stringify(record));
+        }).catch(res => {
+            throw res;
+        });
+    }));
+    it('read', () => __awaiter(void 0, void 0, void 0, function* () {
         assert.isTrue('read' in repo);
-    });
-    it('update', () => {
+        let uuid = 'a0c643d9-c82e-4c36-9c9b-43321bad87bc';
+        let record = new TestModel(1, uuid);
+        repo.fetchHandler = (input, init) => {
+            assert.equal(input.toString(), urlJoin(urlJoin(TestBaseUrl, TestSlug), uuid));
+            assert.isNotNull(init);
+            assert.isTrue('method' in init);
+            assert.equal(init.method, "GET");
+            return new Promise((resolve) => {
+                resolve(new Response(JSON.stringify(record)));
+            });
+        };
+        yield repo.read(uuid).then(res => {
+            assert.equal(JSON.stringify(res), JSON.stringify(record));
+        }).catch(res => {
+            throw res;
+        });
+    }));
+    it('update', () => __awaiter(void 0, void 0, void 0, function* () {
         assert.isTrue('update' in repo);
-    });
-    it('delete', () => {
+        let uuid = 'a0c643d9-c82e-4c36-9c9b-43321bad87bc';
+        let record = new TestModel(1, uuid);
+        repo.fetchHandler = (input, init) => {
+            assert.equal(input.toString(), urlJoin(urlJoin(TestBaseUrl, TestSlug), uuid));
+            assert.isNotNull(init);
+            assert.isTrue('method' in init);
+            assert.equal(init.method, "PUT");
+            return new Promise((resolve) => {
+                resolve(new Response(JSON.stringify(record)));
+            });
+        };
+        yield repo.update(record).then(res => {
+            assert.equal(JSON.stringify(res), JSON.stringify(record));
+        }).catch(res => {
+            throw res;
+        });
+    }));
+    it('delete', () => __awaiter(void 0, void 0, void 0, function* () {
         assert.isTrue('delete' in repo);
-    });
-    it('restore', () => {
+        let uuid = 'a0c643d9-c82e-4c36-9c9b-43321bad87bc';
+        let record = new TestModel(1, uuid);
+        repo.fetchHandler = (input, init) => {
+            assert.equal(input.toString(), urlJoin(urlJoin(TestBaseUrl, TestSlug), uuid) + '?hard=0');
+            assert.isNotNull(init);
+            assert.isTrue('method' in init);
+            assert.equal(init.method, "DELETE");
+            return new Promise((resolve) => {
+                resolve(new Response(JSON.stringify(record)));
+            });
+        };
+        yield repo.delete(uuid).then(res => {
+            assert.equal(JSON.stringify(res), JSON.stringify(record));
+        }).catch(res => {
+            throw res;
+        });
+    }));
+    it('restore', () => __awaiter(void 0, void 0, void 0, function* () {
         assert.isTrue('restore' in repo);
-    });
+        let uuid = 'a0c643d9-c82e-4c36-9c9b-43321bad87bc';
+        let record = new TestModel(1, uuid);
+        repo.fetchHandler = (input, init) => {
+            assert.equal(input.toString(), urlJoin(urlJoin(TestBaseUrl, TestSlug), uuid));
+            assert.isNotNull(init);
+            assert.isTrue('method' in init);
+            assert.equal(init.method, "POST");
+            return new Promise((resolve) => {
+                resolve(new Response(JSON.stringify(record)));
+            });
+        };
+        yield repo.restore(uuid).then(res => {
+            assert.equal(JSON.stringify(res), JSON.stringify(record));
+        }).catch(res => {
+            throw res;
+        });
+    }));
 });
 describe('Repository list method', () => {
     it('filtering', () => {
