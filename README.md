@@ -14,3 +14,13 @@ npm run build
 ```
 npm test
 ```
+
+## Publishing
+
+```
+npm login
+```
+
+```
+npm publish
+```
